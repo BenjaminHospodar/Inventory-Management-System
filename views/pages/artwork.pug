@@ -1,0 +1,41 @@
+html
+	head
+		title Artwork
+body
+	script(src="../artwork.js")
+	include ../partials/header
+
+	h1 #{artwork.Title}
+	p Artist:  
+		a(href="/artists/"+artist )= artwork.Artist
+	
+	div.container 
+		img(src=artwork.Poster alt='Artist image' class="cover" style='max-width: 30%; height: auto;')
+	p Category: #{artwork.Category}
+	p Medium: #{artwork.Medium}
+	p Description: 
+	p #{artwork.Description}
+	p Likes: #{Likes}
+	
+
+	if(user != artwork.Artist)
+		if(hasLiked != true)
+			input(type="submit", value="Like", onclick="sendLike('"+artwork["_id"]+"','"+artwork.Title+"')")
+		else 
+			input(type="submit", value="UnLike", onclick="removeLike('"+artwork["_id"]+"')")
+
+
+	H3 Reviews: 
+	if(user != artwork.Artist)
+		input(type="text", id="review")
+		input(type="submit", value="Submit", onclick="sendReview('"+artwork["_id"]+"','"+artwork.Title+"')")
+	hr
+	for each in reviews
+		p #{each.Reviewer}
+		p #{each.Review}
+		if each.Reviewer == user
+			input(type="submit", value="Delete", onclick="delReview('"+artwork["_id"]+"','"+each._id+"')")
+
+		hr
+	
+	

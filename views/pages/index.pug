@@ -1,0 +1,14 @@
+html
+	head
+		title Home Page
+body
+	include ../partials/header
+	br
+
+	div#main
+		h1 Welcome to the Home Page #{user}!
+
+		p Notifications:
+		for notification in notifications
+			hr
+			p #{notification.Notication}

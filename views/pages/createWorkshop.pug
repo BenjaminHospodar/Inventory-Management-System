@@ -1,0 +1,13 @@
+html
+	head
+		title Create Workshop
+
+
+body
+	h1 Create Workshop:
+	form(action="/workshops", method="post")
+		label(for="name") Workshop Name:
+		input(type="text", id="name", name="name", required)
+		input(type="submit", value="Create")
+
+	input(type="submit", value="Cancel", onclick="location.href = '/profile'")

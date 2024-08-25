@@ -1,0 +1,32 @@
+html
+	head
+		title Search Artworks
+body
+	script(src="../artworks.js")
+	include ../partials/header
+	
+	br
+	span  Title:
+	input(type="text", id="title")
+	
+	span  Name:  
+	input(type="text", id="name")
+
+	span  Catergory:
+	input(type="text", id="categ")
+	input(type="submit", onclick=`findArtworks()`)
+	br
+	br
+
+	each artwork in artworks
+		a(href="/artworks/" + artwork._id) #{artwork.Title}
+		br
+			
+	if current > 1
+		- let url = "/artworks?page=" + (current-1)
+		- if(qstring.length > 0){ url += "&" + qstring; }
+		a(href=url) Previous
+		| 
+	- url = "/artworks?page=" + (current+1)
+	- if(qstring.length > 0){ url += "&" + qstring; }
+	a(href=url) Next

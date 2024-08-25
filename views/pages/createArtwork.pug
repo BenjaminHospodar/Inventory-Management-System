@@ -1,0 +1,35 @@
+html
+	head
+		title Create Artwork
+
+
+body
+	script(src="../createArtwork.js")
+	h1 Create Artwork:
+	
+
+	label(for="title") Title:
+	input(type="text", id="title", name="title", required)
+	br
+	label(for="artist") Artist:
+	input(type="text", id="artist", name="artist", required)
+	br
+	label(for="year") Year:
+	input(type="text", id="year", name="year", required)
+	br
+	label(for="category") Category:
+	input(type="text", id="category", name="category", required)
+	br
+	label(for="medium") Medium:
+	input(type="text", id="medium", name="medium", required)
+	br
+	label(for="description") Description:
+	input(type="text", id="description", name="description", required)
+	br
+	label(for="poster") Poster:
+	input(type="text", id="poster", name="poster", required)
+	br
+	input(type="submit", value="Post", onclick="createArtwork()" )
+	br
+	br
+	input(type="submit", value="Cancel",  onclick="location.href = '/profile'")

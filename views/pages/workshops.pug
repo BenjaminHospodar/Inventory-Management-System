@@ -1,0 +1,16 @@
+html
+	head
+		title Workshops
+body
+	include ../partials/header
+	
+	h1  Workshops:
+	hr
+	each workshop in workshops
+		p Name: #{workshop.Name} 
+		p Artist: #{workshop.Artist}
+		p Users: 
+		for user in workshop.Users
+			p  #{user}
+		hr
+

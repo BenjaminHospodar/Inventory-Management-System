@@ -1,0 +1,65 @@
+html
+	head
+		title Profile
+body
+	script(src="../profile.js")
+	include ../partials/header
+
+	div#main
+		h1 Patron Profile Page for #{user.username}
+		p Account Type: #{user.type}
+
+		p Change Account:
+			input(type="submit", value="Upgrade Account", onclick="openForm()")
+			 	
+		
+		div(class='addArt' id='form' style = {display: 'none'})
+			hr
+			p Add Artwork:
+			label(for="title") Title:
+			input(type="text", id="title", name="title", required)
+			br
+			label(for="artist") Artist:
+			input(type="text", id="artist", name="artist", required)
+			br
+			label(for="year") Year:
+			input(type="text", id="year", name="year", required)
+			br
+			label(for="category") Category:
+			input(type="text", id="category", name="category", required)
+			br
+			label(for="medium") Medium:
+			input(type="text", id="medium", name="medium", required)
+			br
+			label(for="description") Description:
+			input(type="text", id="description", name="description", required)
+			br
+			label(for="poster") Poster:
+			input(type="text", id="poster", name="poster", required)
+			br
+			input(type="submit", value="Post", onclick="upgradeAccount('"+user.username+"')")
+			br
+			br
+			input(type="submit", value="Cancel",  onclick="closeForm()")
+
+		hr
+		h3 Reveiws: 
+		for each in reviewed
+			if(each.type = "Artworks")
+				a(href="/artworks/"+each.ArtworkID) #{each.Artwork} 
+			if(each.type = "Artist")
+				a(href="/artists/"+each.ArtistID) #{each.Artist} 
+			p - #{each.Review} 
+			
+
+		hr
+		h3 Following: 
+		for each in following
+			a(href="/artists/"+each.ArtistID) #{each.Artist} 
+			br
+
+		hr
+		h3 Likes: 
+		for each in likes
+			a(href="/artworks/"+each.ArtworkID) #{each.Artwork} 
+			br

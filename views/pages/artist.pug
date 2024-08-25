@@ -1,0 +1,40 @@
+html
+	head
+		title Artwork
+body
+	script(src="../artist.js")
+	include ../partials/header
+
+	h1 #{artist.name}  
+		if(user != artist.name) 
+			if(followed != true)   
+				input(type="submit", value="Follow", onclick="follow('"+artist["_id"]+"','"+artist.name+"')")
+			else 
+				input(type="submit", value="Unfollow", onclick="unfollow('"+artist["_id"]+"')")
+	p Follows: #{follows}  
+	hr
+
+	H3 Workshops: 
+	for each in workshops
+		p #{each.Name}  
+			if(joinedWorkshop != true)
+				input(type="submit", value="Join", onclick="joinWorkshop('"+each.Name+"')")
+			else 
+				input(type="submit", value="Joined")
+
+	hr
+	H3 Reviews: 
+	if(user != artist.name)
+		input(type="text", id="review")
+		input(type="submit", value="Submit", onclick="sendReview('"+artist["_id"]+"','"+artist.name+"')")
+	for each in reviews
+		p #{each.Reviewer}
+		p #{each.Review}
+		if each.Reviewer == user
+			input(type="submit", value="Delete", onclick="delReview('"+artist["_id"]+"','"+each._id+"')")
+
+	hr
+	H3 Artworks:
+	for each in artworks
+			a(href="/artworks/"+each["_id"]) #{each.Title} 
+			br

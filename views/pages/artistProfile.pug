@@ -1,0 +1,42 @@
+html
+	head
+		title Profile
+body
+	script(src="../profile.js")
+	include ../partials/header
+
+	div#main
+		h1 Artist Profile Page for #{user.username}
+		p Account Type: #{user.type}
+
+		p Change Account:  
+		input(type="submit", value="Downgrade Account", onclick="downgradeAccount('"+user.username+"')")
+		
+		hr
+		p Create Workshop:  
+			input(type="submit", value="Create", onclick="location.href = '/workshops/create'")
+
+		p Create Artwork:  
+			input(type="submit", value="Create", onclick="location.href = '/artworks/create'")
+		
+		hr
+		h3 Reveiws: 
+		for each in reviewed
+			if(each.type = "Artworks")
+				a(href="/artworks/"+each.ArtworkID) #{each.Artwork} 
+			if(each.type = "Artist")
+				a(href="/artists/"+each.ArtistID) #{each.Artist} 
+			p - #{each.Review} 
+			
+
+		hr
+		h3 Following: 
+		for each in following
+			a(href="/artists/"+each.ArtistID) #{each.Artist} 
+			br
+
+		hr
+		h3 Likes: 
+		for each in likes
+			a(href="/artworks/"+each.ArtworkID) #{each.Artwork} 
+			br

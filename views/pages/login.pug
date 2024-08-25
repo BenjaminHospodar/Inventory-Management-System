@@ -1,0 +1,19 @@
+html
+	head
+		title Login Page
+
+
+body
+	script(src="../createAccount.js")
+
+	h1 Login
+	form(action="/login", method="post")
+		label(for="username") Username:
+		input(type="text", id="username", name="username", required)
+		br
+		label(for="password") Password:
+		input(type="password", id="password", name="password", required)
+		br
+		input(type="submit", value="Login")
+
+	input(type="submit", value="Create acount", onclick="createAccount()")
