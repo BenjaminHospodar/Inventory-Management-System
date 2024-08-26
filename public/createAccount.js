@@ -14,7 +14,7 @@ function createAccount(){
 	req.onreadystatechange = function() {
 		if(this.readyState==4 && this.status==201){
 			alert("account added successfully.");
-			window.location.href = "http://localhost:3000/";
+			window.location.href = "http://localhost:3000/"; //reloads page
 		}
 		if(this.readyState==4 && this.status==400){
 			alert("Username already exists");

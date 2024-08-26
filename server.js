@@ -6,16 +6,16 @@ let db;
 //session stuff
 import session from 'express-session';
 import { default as connectMongoDBSession} from 'connect-mongodb-session';
-const MongoDBStore = connectMongoDBSession(session);
-const store = new MongoDBStore({
-uri: 'mongodb://127.0.0.1:27017/term',
+const MongoDBInventory = connectMongoDBSession(session);
+const Inventory = new MongoDBInventory({
+uri: 'mongodb://127.0.0.1:27017/Inventory',
 collection: 'sessiondata'
 });
 app.use(session({
 secret: 'some secret key here',
 resave: true,
 saveUninitialized: true,
-store: store 
+store: Inventory 
 }));
 
 app.use(express.urlencoded({ extended: true }));
@@ -868,7 +868,7 @@ function login(req, res, next) {
 
 MongoClient.connect("mongodb://127.0.0.1:27017")
 	.then(client => {
-		db = client.db("term");
+		db = client.db("Inventory");
 		app.listen(3000);
 		console.log("Server listening on port 3000");
 	})
