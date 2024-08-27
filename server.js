@@ -41,15 +41,6 @@ app.get("/artworks/:id",auth, getArtLikes, loadArtwork);
 app.put("/artworks/:id", addArtFunc ); //getlieks and reviews
 app.delete("/artworks/:id", delArtFunc ); //getlieks and reviews
 
-app.post("/workshops", addWorkshop); //to create artwork page
-app.get("/workshops/create",auth, CreateWorkshop); //to create artwork page
-app.get("/workshops/",auth, loadWorkshops); //to create artwork page
-app.put("/workshops", joinWorkshop );
-
-app.get("/artists/:id",auth,collectArtistInfo, loadArtist); 
-app.put("/artists/:id",  addArtistFunc); 
-app.delete("/artists/:id", delArtistFunc );
-
 app.get("/profile",auth, collectProfileInfo, loadProfile);
 app.put("/profile", changeType);
 
@@ -59,44 +50,6 @@ function auth(req, res, next) {
 		return;
 	}
 	next();
-}
-
-function joinWorkshop(req, res, next) {
-	console.log(req.body);
-	
-	//notications
-	db.collection("workshops")
-	.updateOne({ "Name":req.body.name},
-	{$push: {"Users": req.session.username}})
-	.then(result => {	
-		res.status(201).send("sucess");
-		return;
-	})
-	.catch(err => {
-		res.status(500).send("Error reading database.");
-		console.log(err);
-		return;
-	});
-}
-
-async function loadWorkshops(req, res, next) {
-	try{
-		const workshopCollection = db.collection("workshops");
-		res.workshops = await workshopCollection.find().toArray()
-	
-		res.render("pages/workshops", {workshops: res.workshops});
-		return;
-	}catch{
-		res.status(500).send("Error Adding to Database");
-	}
-}
-
-function CreateWorkshop(req, res, next) {
-	if (req.session.artist) { //render home of logged in
-		res.render("pages/createWorkshop");
-		return;
-	}
-	res.status(401).send("Unauthorized");
 }
 
 function CreateArtwork(req, res, next) {
@@ -167,155 +120,6 @@ async function addArtwork(req, res, next) {
 	});
 }
 
-function addWorkshop(req, res, next) {
-	console.log(req.body);
-	
-	db.collection("workshops")
-	.insertOne({ 
-		"Name": req.body.name,
-		"Artist": req.session.username,
-		"Users": []
-	})
-	.catch(err => {
-		res.status(500).send("Error reading database.");
-		console.log(err);
-		return;
-	});
-	
-	//notications
-	db.collection("notifications")
-	.insertOne({ 
-		"Artist": req.session.username,
-		"Notication": `${req.session.username} added a Workshop ${req.body.name}`
-	})
-	.then(result => {	
-		res.status(201).redirect("/profile");
-		return;
-	})
-	.catch(err => {
-		res.status(500).send("Error reading database.");
-		console.log(err);
-		return;
-	});
-}
-
-function addArtistFunc(req, res, next) {
-	let id = req.params.id;
-	let oid;
-
-	try {
-		oid = new ObjectId(id);
-	} catch {
-		res.status(404).send("That ID does not exist.");
-		return;
-	}
-	
-	if(req.body.type == "follow"){
-		db.collection("follows")
-		.insertOne({ "Artist": req.body.artist,"ArtistID": oid, "Follower": req.session.username})
-		.then(result => {
-			if (!result) {
-				res.status(404).send("That ID does not exist in the database.");
-				return;
-			}	
-			res.status(201).send("success")
-			return;
-		})
-		.catch(err => {
-			res.status(500).send("Error reading database.");
-			console.log(err);
-			return;
-		});
-
-	}if(req.body.type == "joinWorkshop"){ //special case will need to check to see if exists/ insert name into array
-		db.collection("workshops")
-		.insertOne({ "Name": req.body.name,"ArtistID": oid, "Liker": req.session.username})
-		.then(result => {
-			if (!result) {
-				res.status(404).send("That ID does not exist in the database.");
-				return;
-			}	
-			console.log("result");
-			console.log(result);
-			res.status(201).send("success")
-			return;
-		})
-		.catch(err => {
-			res.status(500).send("Error reading database.");
-			console.log(err);
-			return;
-		});
-	}
-	if(req.body.type == "review"){
-		db.collection("reviews")
-		.insertOne({ "Artist": req.body.artist,"ArtistID": oid, "Reviewer": req.session.username, "Review": req.body.review, "Type": "Artist"})
-		.then(result => {
-			if (!result) {
-				res.status(404).send("That ID does not exist in the database.");
-				return;
-			}	
-			res.status(201).send("success")
-			return;
-		})
-		.catch(err => {
-			res.status(500).send("Error reading database.");
-			console.log(err);
-			return;
-		});
-	}
-}
-
-function delArtistFunc(req, res, next) {
-	console.log(req.body);
-	let id = req.params.id;
-	let oid;
-
-	try {
-		oid = new ObjectId(id);
-	} catch {
-		res.status(404).send("That ID does not exist.");
-		return;
-	}
-
-	if(req.body.type == "removeReview"){
-		db.collection("reviews")
-		.deleteOne({ "_id": new ObjectId(req.body.reviewID)})
-		.then(result => {
-			console.log(result);
-			if (!result) {
-				res.status(404).send("That ID does not exist in the database.");
-				return;
-			}	
-			res.status(201).send("success")
-			return;
-		})
-		.catch(err => {
-			res.status(500).send("Error reading database.");
-			console.log(err);
-			return;
-		});
-
-	}if(req.body.type == "unfollow"){
-		db.collection("follows")
-		.deleteOne({"ArtistID": oid, "Follower": req.session.username})
-		.then(result => {
-			if (!result) {
-				res.status(404).send("That ID does not exist in the database.");
-				return;
-			}	
-			console.log("result");
-			console.log(result);
-			res.status(201).send("success")
-			return;
-		})
-		.catch(err => {
-			res.status(500).send("Error reading database.");
-			console.log(err);
-			return;
-		});
-	}
-}
-
 async function collectArtistInfo(req, res, next){
 	try {
 		let id = req.params.id;
@@ -369,27 +173,6 @@ async function collectArtistInfo(req, res, next){
 		res.status(500).send("Error reading database.");
 		console.log(err);
 	  }
-}
-
-async function loadArtist(req, res, next) {
-	console.log(res.artworks);
-	try{
-		res.status(200).render("pages/artist", {
-			artist: res.result, 
-			follows: res.followCount,
-			followed: res.followed,
-			reviews: res.reviews,
-			user: req.session.username,
-			artworks: res.artworks,
-			workshops: res.workshops,
-			joinedWorkshop: res.Joined
-
-			})
-	}
-	catch{
-		res.status(500).send("Error reading database.");
-			console.log(err);
-	}
 }
 
 function delArtFunc(req, res, next) {
