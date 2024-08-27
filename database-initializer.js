@@ -14,7 +14,7 @@ const client = new MongoClient(uri);
 
 async function run() {
   try {
-    const database = client.db("term");
+    const database = client.db("Inventory");
     const result = await database.dropDatabase();
     
     if(result){
