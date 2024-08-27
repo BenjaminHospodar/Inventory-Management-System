@@ -24,25 +24,33 @@ app.set("view engine", "pug");
 app.use(express.static("public"));
 app.use(express.json()); 
 
+
+// (TODO) Figure out the Paths i need.  
+
+//remove notifications for now, want a dashboard view, maybe change notifcations to 
 app.get("/", loginPage );
 
+//adjust to remove 
 app.post("/login", login);      // send POST request to /login route to login
 app.get("/logout", logout);     // send GET request to /logout route to logout
 
-app.post("/account/create", createAccount); 
-
+//main search engine for items
 app.get("/artworks",auth, queryParser, loadArtworks, respondArtworks);
 app.put("/artworks",queryParser, loadArtworks, respondQuery);
 app.post("/artworks", addArtwork); //to create artwork
 
-app.get("/artworks/create",auth, CreateArtwork); //to create artwork page
-
+//change to items 
 app.get("/artworks/:id",auth, getArtLikes, loadArtwork); 
-app.put("/artworks/:id", addArtFunc ); //getlieks and reviews
-app.delete("/artworks/:id", delArtFunc ); //getlieks and reviews
+app.put("/artworks/:id", addArtFunc ); 
+app.delete("/artworks/:id", delArtFunc ); 
+app.get("/artworks/create",auth, CreateArtwork); 
 
+//profile 
 app.get("/profile",auth, collectProfileInfo, loadProfile);
 app.put("/profile", changeType);
+
+//add this to profile, only for ICS+ view
+app.post("/account/create", createAccount); 
 
 function auth(req, res, next) {
 	if (!req.session.loggedin) {
