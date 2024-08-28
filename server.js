@@ -25,7 +25,15 @@ app.use(express.static("public"));
 app.use(express.json()); 
 
 
-// (TODO) Figure out the Paths i need.  
+/**(TODO) 
+ * Figure out the Paths i need. 
+ * recode everything
+ * add barcode and PDF functionality 
+ * create routes
+ * clean up code
+ * add css
+ *  
+*/ 
 
 //remove notifications for now, want a dashboard view, maybe change notifcations to 
 app.get("/", loginPage );
